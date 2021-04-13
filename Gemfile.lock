@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mina-systemd-puma (0.1.0)
+    mina-systemd-puma (0.2.0)
       mina (>= 1.0)
       puma-status (>= 1.3)
 

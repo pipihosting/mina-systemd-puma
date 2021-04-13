@@ -3,9 +3,10 @@ set :puma_state,  -> { "#{fetch(:current_path)}/tmp/sockets/puma.state" }
 set :puma_config, -> { "#{fetch(:deploy_to)}/shared/config/puma.rb" }
 set :puma_sock,   -> { "#{fetch(:deploy_to)}/shared/tmp/sockets/puma.sock" }
 
+set :puma_service_name, 'puma.service'
+set :puma_socket_name,  'puma.socket'
+
 set :sysctl_cmd,        'sudo systemctl'
-set :service_unit_name, 'puma.service'
-set :socket_unit_name,  'puma.socket'
 set :systemd_unit_path, '/etc/systemd/system'
 set :system_bundler,    -> { "/home/#{fetch(:user)}/.rbenv/bin/rbenv exec bundle" }
 
@@ -16,7 +17,7 @@ namespace :puma do
 [Unit]
 Description=Puma HTTP Server
 After=network.target
-Requires=#{ fetch(:socket_unit_name) }
+Requires=#{ fetch(:puma_socket_name) }
 
 [Service]
 Type=simple
@@ -43,12 +44,12 @@ Backlog=1024
 [Install]
 WantedBy=sockets.target
 }
-    service_path = fetch(:systemd_unit_path) + "/" + fetch(:service_unit_name)
+    service_path = fetch(:systemd_unit_path) + "/" + fetch(:puma_service_name)
     comment %{Creating service unit file}
     command %{ sudo touch #{service_path} }
     command %{ echo "#{ template_service }" | sudo tee -a #{ service_path } }
 
-    socket_path = fetch(:systemd_unit_path) + "/" + fetch(:socket_unit_name)
+    socket_path = fetch(:systemd_unit_path) + "/" + fetch(:puma_socket_name)
     comment %{Creating socket unit file}
     command %{ sudo touch #{socket_path} }
     command %{ echo "#{ template_socket }" | sudo tee -a #{ socket_path } }
@@ -63,11 +64,11 @@ WantedBy=sockets.target
 
   desc "Remove units"
   task :uninstall do
-    command %{ #{ fetch(:sysctl_cmd) } disable #{fetch(:service_unit_name)} }
-    command %{ sudo rm #{File.join(fetch(:systemd_unit_path), fetch(:service_unit_name))}  }
+    command %{ #{ fetch(:sysctl_cmd) } disable #{fetch(:puma_service_name)} }
+    command %{ sudo rm #{File.join(fetch(:systemd_unit_path), fetch(:puma_service_name))}  }
 
-    command %{ #{ fetch(:sysctl_cmd) } disable #{fetch(:socket_unit_name)} }
-    command %{ sudo rm #{File.join(fetch(:systemd_unit_path), fetch(:socket_unit_name))}  }
+    command %{ #{ fetch(:sysctl_cmd) } disable #{fetch(:puma_socket_name)} }
+    command %{ sudo rm #{File.join(fetch(:systemd_unit_path), fetch(:puma_socket_name))}  }
 
     comment %{Reloading systemctl daemon}
     command %{ #{ fetch(:sysctl_cmd) } daemon-reload }
@@ -81,17 +82,27 @@ WantedBy=sockets.target
 
   desc "Check puma.service status"
   task :status => :remote_environment do
-    command %{ #{ fetch(:sysctl_cmd) } status #{fetch(:socket_unit_name)} #{fetch(:service_unit_name)} }
+    command %{ #{ fetch(:sysctl_cmd) } status #{fetch(:puma_socket_name)} #{fetch(:puma_service_name)} }
+  end
+
+  desc "Start puma.service and puma.socket"
+  task :start => :remote_environment do
+    command %{ #{ fetch(:sysctl_cmd) } start #{fetch(:puma_socket_name)} #{fetch(:puma_service_name)} }
+  end
+
+  desc "Stop puma.service and puma.socket"
+  task :stop => :remote_environment do
+    command %{ #{ fetch(:sysctl_cmd) } stop #{fetch(:puma_socket_name)} #{fetch(:puma_service_name)} }
   end
 
   desc "Restart puma.service "
   task :restart => :remote_environment do
-    command %{ #{ fetch(:sysctl_cmd) } restart #{fetch(:service_unit_name)} }
+    command %{ #{ fetch(:sysctl_cmd) } restart #{fetch(:puma_service_name)} }
   end
 
   desc "Restart puma.service and puma.socket"
   task :hard_restart => :remote_environment do
-    command %{ #{ fetch(:sysctl_cmd) } restart #{fetch(:socket_unit_name)} #{fetch(:service_unit_name)} }
+    command %{ #{ fetch(:sysctl_cmd) } restart #{fetch(:puma_socket_name)} #{fetch(:puma_service_name)} }
   end
 
 end
