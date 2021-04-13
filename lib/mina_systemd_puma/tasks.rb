@@ -7,7 +7,7 @@ set :sysctl_cmd,        'sudo systemctl'
 set :service_unit_name, 'puma.service'
 set :socket_unit_name,  'puma.socket'
 set :systemd_unit_path, '/etc/systemd/system'
-set :system_bundler,    "/home/#{fetch(:user)}/.rbenv/bin/rbenv exec bundle"
+set :system_bundler,    -> { "/home/#{fetch(:user)}/.rbenv/bin/rbenv exec bundle" }
 
 namespace :puma do
   desc "Init systemd units"
@@ -46,12 +46,12 @@ WantedBy=sockets.target
     service_path = fetch(:systemd_unit_path) + "/" + fetch(:service_unit_name)
     comment %{Creating service unit file}
     command %{ sudo touch #{service_path} }
-    command %{ sudo echo "#{ template_service }" > #{ service_path } }
+    command %{ echo "#{ template_service }" | sudo tee -a #{ service_path } }
 
     socket_path = fetch(:systemd_unit_path) + "/" + fetch(:socket_unit_name)
     comment %{Creating socket unit file}
     command %{ sudo touch #{socket_path} }
-    command %{ sudo echo "#{ template_socket }" > #{ socket_path } }
+    command %{ echo "#{ template_socket }" | sudo tee -a #{ socket_path } }
 
     comment %{Reloading systemctl daemon}
     command %{ #{ fetch(:sysctl_cmd) } daemon-reload }
@@ -68,11 +68,20 @@ WantedBy=sockets.target
 
     command %{ #{ fetch(:sysctl_cmd) } disable #{fetch(:socket_unit_name)} }
     command %{ sudo rm #{File.join(fetch(:systemd_unit_path), fetch(:socket_unit_name))}  }
+
+    comment %{Reloading systemctl daemon}
+    command %{ #{ fetch(:sysctl_cmd) } daemon-reload }
+
   end
 
-  desc "Check puma status"
-  task :status => :remote_environment do
+  desc "Check puma state"
+  task :state => :remote_environment do
     command %{cd #{fetch(:current_path)} && #{fetch(:puma_status)} #{fetch(:puma_state)} }
+  end
+
+  desc "Check puma.service status"
+  task :status => :remote_environment do
+    command %{ #{ fetch(:sysctl_cmd) } status #{fetch(:socket_unit_name)} #{fetch(:service_unit_name)} }
   end
 
   desc "Restart puma.service "

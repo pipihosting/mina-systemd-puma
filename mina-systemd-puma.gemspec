@@ -30,5 +30,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "mina", ">= 1.0"
+  spec.add_dependency "puma-status", ">= 1.3"
 
 end
