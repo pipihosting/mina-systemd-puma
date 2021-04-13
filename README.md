@@ -19,7 +19,52 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Prerequisite
+
+- Puma v5.0 + (Removed daemon mode)
+- Mina v1.0 + 
+
+Following steps are for Rails deployment with Mina.
+
+1. Add `mina-systemd-puma` to Gemfile. To have more tasks like `puma:state`,
+   we suggest to install for all groups and don't add 'require: false'.
+
+```ruby
+   gem 'mina-systemd-puma'
+```
+
+2. Require commands and set attributes from `deploy.rb`
+
+```ruby
+require 'mina_systemd_puma/tasks'
+```
+
+e.g.,
+
+```ruby
+set :user, 'ubuntu'
+set :service_unit_name, 'puma-web.service'
+set :socket_unit_name,  'puma-web.socket'
+```
+
+3. Useful tasks
+
+- puma:install
+
+This task will install service unit as well as socket unit. Make sure you
+have set both names and ssh user as above.
+
+For more information suggested from [puma with systemd](https://github.com/puma/puma/blob/master/docs/systemd.md)
+
+
+- puma:state
+
+We add `puma-status` gem so that it's easy to manage puma processes.
+
+Please check
+[tasks.rb](https://github.com/pipihosting/mina-systemd-puma/blob/main/lib/mina_systemd_puma/tasks.rb)
+for more tasks.
+
 
 ## Development
 
