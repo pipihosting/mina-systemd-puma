@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "mina_systemd_puma"
-
 require "minitest/autorun"
 
 require 'pathname'

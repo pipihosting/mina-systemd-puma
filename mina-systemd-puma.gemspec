@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "lib/mina_systemd_puma/version"
+require_relative "lib/mina/systemd/puma/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "mina-systemd-puma"
-  spec.version       = MinaSystemdPuma::VERSION
+  spec.version       = Mina::Systemd::Puma::VERSION
   spec.authors       = ["MGC"]
   spec.email         = ["chagel@gmail.com"]
 

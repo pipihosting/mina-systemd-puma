@@ -36,7 +36,7 @@ Following steps are for Rails deployment with Mina.
 2. Require commands and set attributes from `deploy.rb`
 
 ```ruby
-require 'mina_systemd_puma/tasks'
+require 'mina/systemd/puma'
 ```
 
 ```ruby

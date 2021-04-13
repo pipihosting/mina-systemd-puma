@@ -1,7 +1,7 @@
 require 'mina/rails'
 require 'mina/git'
 require 'mina/rbenv'
-require 'mina_systemd_puma/tasks'
+require 'mina/systemd/puma'
 require 'fileutils'
 
 FileUtils.mkdir_p "#{Dir.pwd}/deploy"
