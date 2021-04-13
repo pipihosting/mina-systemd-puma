@@ -7,7 +7,7 @@ set :sysctl_cmd,        'sudo systemctl'
 set :service_unit_name, 'puma.service'
 set :socket_unit_name,  'puma.socket'
 set :systemd_unit_path, '/etc/systemd/system'
-set :system_bundler,    '/home/ubuntu/.rbenv/bin/rbenv exec bundle'
+set :system_bundler,    "/home/#{fetch(:user)}/.rbenv/bin/rbenv exec bundle"
 
 namespace :puma do
   desc "Init systemd units"

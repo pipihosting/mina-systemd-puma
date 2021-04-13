@@ -3,11 +3,37 @@
 require "test_helper"
 
 class PumaTest < Minitest::Test
-  def test_that_it_has_a_version_number
-    refute_nil ::Puma::VERSION
+  def setup
+    @old_cwd = Dir.pwd
+    @env_root = TEST_ROOT.join("fake")
+    Dir.chdir(@env_root)
+    FileUtils.rm_rf("deploy")
   end
 
-  def test_it_does_something_useful
-    #assert false
+  def teardown
+    Dir.chdir(@old_cwd)
+  end
+
+  def test_that_it_has_a_version_number
+    refute_nil MinaSystemdPuma::VERSION
+  end
+
+  def test_it_should_install_units
+    res = system("sudo systemctl list-units | grep puma")
+    assert_equal res, false
+
+    #mina "puma:install"
+    #mina 'deploy'
+
+    #res = system("sudo systemctl list-units | grep puma")
+    #assert_equal res, true
+
+  end
+
+  private
+  def mina(task)
+    cmd = "bundle exec mina --verbose #{task}"
+    puts "$ #{cmd}"
+    system cmd
   end
 end
