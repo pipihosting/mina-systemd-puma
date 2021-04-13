@@ -1,24 +1,24 @@
 # frozen_string_literal: true
 
-require_relative "lib/mina/systemd/puma/version"
+require_relative "lib/puma/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "mina-systemd-puma"
-  spec.version       = Mina::Systemd::Puma::VERSION
+  spec.version       = Puma::VERSION
   spec.authors       = ["MGC"]
   spec.email         = ["chagel@gmail.com"]
 
-  spec.summary       = "TODO: Write a short summary, because RubyGems requires one."
-  spec.description   = "TODO: Write a longer description or delete this line."
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = "Let Mina deploy Puma with Systemd"
+  spec.description   = "This repo is to work as a mina plugin and to deploy the daemonless puma with systemd"
+  spec.homepage      = "https://github.com/pipihosting/mina-systemd-puma"
   spec.license       = "MIT"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
 
-  spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
+  spec.metadata["allowed_push_host"] = ""
 
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = "TODO: Put your gem's public repo URL here."
-  spec.metadata["changelog_uri"] = "TODO: Put your gem's CHANGELOG.md URL here."
+  spec.metadata["source_code_uri"] = "https://github.com/pipihosting/mina-systemd-puma"
+  spec.metadata["changelog_uri"] = "https://github.com/pipihosting/mina-systemd-puma"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
