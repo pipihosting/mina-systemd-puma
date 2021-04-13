@@ -15,7 +15,7 @@ class PumaTest < Minitest::Test
   end
 
   def test_that_it_has_a_version_number
-    refute_nil MinaSystemdPuma::VERSION
+    refute_nil Mina::Systemd::Puma::VERSION
   end
 
   def test_it_should_install_units
