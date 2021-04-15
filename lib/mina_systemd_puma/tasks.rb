@@ -3,8 +3,9 @@ set :puma_state,  -> { "#{fetch(:current_path)}/tmp/sockets/puma.state" }
 set :puma_config, -> { "#{fetch(:deploy_to)}/shared/config/puma.rb" }
 set :puma_sock,   -> { "#{fetch(:deploy_to)}/shared/tmp/sockets/puma.sock" }
 
-set :puma_service_name, 'puma.service'
-set :puma_socket_name,  'puma.socket'
+set :puma_application_name, 'puma'
+set :puma_service_name, -> { "#{fetch(:puma_application_name)}.service" }
+set :puma_socket_name,  -> { "#{fetch(:puma_application_name)}.socket" }
 
 set :sysctl_cmd,        'sudo systemctl'
 set :systemd_unit_path, '/etc/systemd/system'

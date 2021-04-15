@@ -22,7 +22,7 @@ Or install it yourself as:
 ### Prerequisite
 
 - Puma v5.0 + (Removed daemon mode)
-- Mina v1.0 + 
+- Mina v1.0 +
 
 Following steps are for Rails deployment with Mina.
 
@@ -41,8 +41,7 @@ require 'mina_systemd_puma/tasks'
 
 ```ruby
 set :user, 'ubuntu'
-set :puma_service_name, 'puma-web.service'
-set :puma_socket_name,  'puma-web.socket'
+set :puma_application_name, 'puma-web'
 ```
 
 3. Useful tasks
@@ -66,7 +65,7 @@ set :puma_socket_name,  'puma-web.socket'
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. 
+After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests.
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
